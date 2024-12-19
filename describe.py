@@ -28,8 +28,26 @@ def load_csv(file_path):
         print(f"An unexpected error occurred: {e}")
         return None, None
 
+def calculate_mean(data):
+    return sum(data) / len(data)
+
+def calculate_variance(data, mean):
+    return sum((x - mean) ** 2 for x in data) / (len(data) - 1) if len(data) > 1 else 0
+
+def calculate_std(variance):
+    return variance ** 0.5  # math.sqrt(variance)
+
+def calculate_percentile(data, p):
+    k = (len(data) - 1) * p / 100
+    f = int(k)
+    c = f + 1
+    if c < len(data):
+        return data[f] + (k - f) * (data[c] - data[f])
+    else:
+        return data[f]
+
 def is_float(value):
-    """check if is able to turn into numeric value"""
+    """is numeric data"""
     try:
         float(value)
         return True
@@ -45,18 +63,30 @@ def calculate_statistics(headers, data):
             continue
         col_data = [float(row[col]) for row in data if is_float(row[col])]
         col_data = [x for x in col_data if not np.isnan(x)]  # filter out NaN values   
-        print(f"Column data: {col_data}\n")  # 현재 열의 값 출력
+        
         if col_data:
+            col_data.sort()  # for percentile calculation
+            count = len(col_data)
+            mean = calculate_mean(col_data)
+            variance = calculate_variance(col_data, mean)
+            std = calculate_std(variance)
+            min = col_data[0]
+            max = col_data[-1]
+            p25 = calculate_percentile(col_data, 25)
+            p50 = calculate_percentile(col_data, 50)
+            p75 = calculate_percentile(col_data, 75)
+
             statistics[header] = {
-                'count': len(col_data),
-                'mean': np.mean(col_data),  # average
-                'std': np.std(col_data, ddof=1) if len(col_data) > 1 else 0, # standard deviation, ddof=1: Sample Standard Deviation.  improves the accuracy of the estimate by compensating for the bias caused by using sample data. The degrees of freedom adjustment helps correct the issue of underestimation.
-                'min': np.min(col_data),
-                '25%': np.percentile(col_data, 25),
-                '50%': np.percentile(col_data, 50),
-                '75%': np.percentile(col_data, 75),
-                'max': np.max(col_data)
+                'count': count,
+                'mean': mean,
+                'std': std,
+                'min': min,
+                '25%': p25,
+                '50%': p50,
+                '75%': p75,
+                'max': max
             }
+
     return statistics
 
 def print_statistics(statistics):
