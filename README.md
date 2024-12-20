@@ -43,6 +43,7 @@ Restrictions:
             ![Care of Magical Creatures_histogram](https://github.com/user-attachments/assets/faa0cb86-07a2-47d0-aef2-1e90be906018)
     - Scatter Plot:
         - displays a scatter plot answering the next question :
+          
             _"What are the two features that are similar ?"_
           
     - Pair Plot:
