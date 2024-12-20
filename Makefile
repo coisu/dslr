@@ -7,6 +7,15 @@ run: make
 test: 
 	@docker run -it -v $(PWD):/app dslr python3 describe.py datasets/dataset_train.csv
 
+histogram:
+	@docker run -it -v $(PWD):/app dslr python3 histogram.py datasets/dataset_train.csv
+
+scatter_plot:
+	@docker run -it -v $(PWD):/app dslr python3 scatter_plot.py datasets/dataset_train.csv
+
+pair_plot:
+	@docker run -it -v $(PWD):/app dslr python3 pair_plot.py datasets/dataset_train.csv
+
 # Run with Jupyter Notebook
 notebook:
 	@docker run -it -p 8888:8888 -v $(PWD):/app dslr jupyter notebook --ip=0.0.0.0 --allow-root --no-browser
@@ -20,8 +29,11 @@ clean:
 	@docker volume prune -f
 	@docker network prune -f
 
-fclean: down
+fclean: down clean
+	@rm -rf histograms
+	@echo "Deleted histograms directory"
 	@docker images -q dslr | xargs -r docker rmi
+	@echo "Deleted dslr image"
 
 re: fclean build
 
