@@ -1,32 +1,7 @@
 import sys
 import csv
 import numpy as np
-
-def load_csv(file_path):
-    """load CSV, return data"""
-    try:
-        with open(file_path, 'r') as f:
-            rdr = csv.reader(f)
-            headers = next(rdr) # first row is headers
-            data = []
-            for row in rdr:
-                data.append(row)
-        # print("data[0]: ", data[0])
-            # rows = list(rdr)  # turn into list 
-            # headers, data = rows[0], rows[1:] # first row is headers, rest is data
-        return headers, data
-    
-    except FileNotFoundError:
-        print(f"Error: File not found - '{file_path}'. Please check the file path.")
-        return None, None
-
-    except PermissionError:
-        print(f"Error: Permission denied for file - '{file_path}'.")
-        return None, None
-
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return None, None
+from utils import load_dataset
 
 def calculate_mean(data):
     return sum(data) / len(data)
@@ -54,30 +29,29 @@ def is_float(value):
     except ValueError:
         return False
 
-def calculate_statistics(headers, data):
+def calculate_statistics(data):
     exclude_columns = {"First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
     statistics = {}
 
-    for col, header in enumerate(headers):
-        if header in exclude_columns: # possible to exist 'NaN', 'INF' or 'Infinity' as string
+    for column in data.columns:
+        if column in exclude_columns or not np.issubdtype(data[column].dtype, np.number):
             continue
-        col_data = [float(row[col]) for row in data if is_float(row[col])]
-        col_data = [x for x in col_data if not np.isnan(x)]  # filter out NaN values   
-        
-        if col_data:
-            col_data.sort()  # for percentile calculation
-            count = len(col_data)
+
+        col_data = data[column].dropna().sort_values() # .dropna() filters out missing values e.g. NaN
+        # data = pandas.DataFrame
+        # data[column] = pandas.Series
+        if not col_data.empty:
             mean = calculate_mean(col_data)
             variance = calculate_variance(col_data, mean)
             std = calculate_std(variance)
             min = col_data[0]
-            max = col_data[-1]
+            max = col_data.iloc[-1] # pandas.Series cannot access with negative index
             p25 = calculate_percentile(col_data, 25)
             p50 = calculate_percentile(col_data, 50)
             p75 = calculate_percentile(col_data, 75)
 
-            statistics[header] = {
-                'count': count,
+            statistics[column] = {
+                'count': len(col_data),
                 'mean': mean,
                 'std': std,
                 'min': min,
@@ -102,6 +76,9 @@ if __name__ == "__main__":
         sys.exit(1)
     
     file_path = sys.argv[1]
-    headers, data = load_csv(file_path)
-    statistics = calculate_statistics(headers, data)
+    data = load_dataset(file_path) # pd.DataFrame
+    if data is None:
+        print("Failed to load the dataset.")
+        sys.exit(1)
+    statistics = calculate_statistics(data) # dict
     print_statistics(statistics)
