@@ -32,18 +32,23 @@ Restrictions:
 - Tasks:
 
     - Histogram:
-        - Visualize the distribution of scores for specific subjects across each house.
-     
-    ![std_line_graph](https://github.com/user-attachments/assets/c571156f-084e-47ee-b90a-bf12597922b9)
-    ![Charms_histogram](https://github.com/user-attachments/assets/6a0972ab-ca69-4b66-a489-7cf27f793516)
-    ![History of Magic_histogram](https://github.com/user-attachments/assets/6de17b98-aeb9-4e33-bde9-efe5fba5f0b7)
-    ![Potions_histogram](https://github.com/user-attachments/assets/fdfcd5f6-4dc0-41df-ae16-cd08f71880c4)
-    ![Care of Magical Creatures_histogram](https://github.com/user-attachments/assets/faa0cb86-07a2-47d0-aef2-1e90be906018)
+        - displays a histogram answering the next question:
+          
+            _"Which Hogwarts course has a homogeneous score distribution between all four houses?"_
+         
+            ![std_line_graph](https://github.com/user-attachments/assets/c571156f-084e-47ee-b90a-bf12597922b9)
+            ![Charms_histogram](https://github.com/user-attachments/assets/6a0972ab-ca69-4b66-a489-7cf27f793516)
+            ![History of Magic_histogram](https://github.com/user-attachments/assets/6de17b98-aeb9-4e33-bde9-efe5fba5f0b7)
+            ![Potions_histogram](https://github.com/user-attachments/assets/fdfcd5f6-4dc0-41df-ae16-cd08f71880c4)
+            ![Care of Magical Creatures_histogram](https://github.com/user-attachments/assets/faa0cb86-07a2-47d0-aef2-1e90be906018)
     - Scatter Plot:
-
-        - Compare similar pairs of features.
+        - displays a scatter plot answering the next question :
+            _"What are the two features that are similar ?"_
+          
     - Pair Plot:
         - Display relationships between multiple features simultaneously.
+        - displays a pair plot or scatter plot matrix (according to the library that you are using).
+            > From this visualization, what features are you going to use for your logistic regression?
 
 ### Step 3: Logistic Regression
 > Objective: Use logistic regression to classify students into their respective houses.
