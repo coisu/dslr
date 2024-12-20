@@ -9,7 +9,7 @@ def calculate_variance_std(data, columns, group_column="Hogwarts House"):
     results = []
     for column in columns:
         group_stats = data.groupby(group_column, observed=False)[column].agg(['var', 'std']).reset_index()
-        group_stats['Course'] = column  # Add course name for identification
+        group_stats['Course'] = column
         results.append(group_stats)
     return pd.concat(results, ignore_index=True)
 
