@@ -59,3 +59,34 @@ Restrictions:
 ### Step 4: Review and Submission
 > Objective: Test all functionalities to ensure proper operation and prepare for submission.
 
+
+
+## 🛠️ Tech Stack
+
+### Programming Languages
+- **Python**: Core programming language used for data analysis and visualization.
+- **Bash**: Automating processes and task execution.
+
+### Data Analysis & Visualization
+- **Pandas**: For data manipulation and analysis.
+- **Matplotlib**: For creating static, interactive, and animated visualizations.
+- **Seaborn**: For statistical data visualization.
+
+### Machine Learning (Optional, if applicable)
+- **Scikit-learn**: For machine learning models and evaluation.
+- **NumPy**: For numerical computing and array manipulation.
+
+### Development Tools
+- **Makefile**: For task automation (e.g., cleaning, building, and running scripts).
+- **Docker** (Optional): Containerized environment for consistent development and deployment.
+
+### Project Management
+- **Git**: Version control and collaboration.
+- **GitHub**: Repository hosting and issue tracking.
+
+### Other Tools
+- **Jupyter Notebook**: Planning to implement
+
+---
+
+
