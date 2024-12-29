@@ -128,15 +128,19 @@ def find_top_n_similar_features(data, n=78, scale_data=False):
     # Flatten the correlation matrix and sort by values
     sorted_correlation = (
         correlation_matrix.unstack()
-        .sort_values(ascending=False)
-        .drop_duplicates()
+        .reset_index()
+        .drop_duplicates(subset=0, keep="last")
+        .rename(columns={0: "correlation", "level_0": "feature_1", "level_1": "feature_2"})
     )
+    sorted_correlation = sorted_correlation[
+        sorted_correlation["feature_1"] != sorted_correlation["feature_2"]
+    ].sort_values(by="correlation", ascending=False)
 
     print("\nSorted Correlation (Descending Order):")
     print(sorted_correlation)
 
     # Get the top N feature pairs
-    top_n_pairs = sorted_correlation.head(n).index.tolist()
+    top_n_pairs = sorted_correlation.head(n)[["feature_1", "feature_2"]].values.tolist()
 
     return top_n_pairs
 
