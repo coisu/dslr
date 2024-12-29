@@ -115,7 +115,7 @@ Normalization and Standardization are two key preprocessing techniques for scali
 | **Result Range**    | [0, 1]                                     | Mean = 0, Std. Dev = 1                    |
 | **Sensitivity to Outliers** | Very sensitive.                     | Less sensitive.                           |
 | **Applications**    | Neural Networks, Fixed-scale requirements. | Logistic Regression, SVM, PCA, KNN.       |
-
+| **Python Library**  | scikit-learn, MinMaxScaler                 | scikit-learn, StandardScaler                |
 ---
 
 ## **3. Examples**
