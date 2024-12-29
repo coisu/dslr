@@ -1,6 +1,12 @@
 # dslr
 Discover Data Science through this project by recreating the Hogwarts Sorting Hat using logistic regression!
 
+### Table of Contents
+- [Task](#task-sequence)
+- [Feature Scaling](#feature-scaling)
+- [Tech Stack](#tech-stack)
+
+
 ## Task Sequence
 ### Step 1: Data Analysis (describe.[extension])
 > Objective: Calculate and output statistical summary information for the dataset.
@@ -65,9 +71,127 @@ Restrictions:
 ### Step 4: Review and Submission
 > Objective: Test all functionalities to ensure proper operation and prepare for submission.
 
+---
+
+## Feature Scaling
+## **Normalization and Standardization**
+
+Normalization and Standardization are two key preprocessing techniques for scaling data. While they both adjust the scale of features, they serve different purposes and impact data differently. Here's a detailed comparison:
+
+---
+
+## **1. Definitions**
+
+### **Normalization**
+- **Definition**: Scales data to a fixed range, typically [0, 1].
+- **Formula**:
+
+![image](https://github.com/user-attachments/assets/8de435b3-7819-41f1-9e58-05c41edccee2)
+
+- **Result**:
+  - Transforms all feature values to lie between 0 and 1.
+  - Retains the original distribution shape.
+
+---
+
+### **Standardization**
+- **Definition**: Scales data to have a mean of 0 and a standard deviation of 1.
+- **Formula**:
+
+![image](https://github.com/user-attachments/assets/6ad11025-8725-4cf7-b3cc-bef5ecedb3f3)
+
+- **Result**:
+  - Transforms data to have a standard normal distribution.
+  - Adjusts for centrality (mean) and spread (variance).
+
+---
+
+## **2. Key Differences**
+
+| **Aspect**         | **Normalization**                          | **Standardization**                       |
+|---------------------|--------------------------------------------|-------------------------------------------|
+| **Purpose**         | Scales data to a specific range (0-1).     | Adjusts data to have mean 0, std. dev. 1. |
+| **Impact on Data**  | Retains original distribution.             | Approximates a standard normal distribution. |
+| **Result Range**    | [0, 1]                                     | Mean = 0, Std. Dev = 1                    |
+| **Sensitivity to Outliers** | Very sensitive.                     | Less sensitive.                           |
+| **Applications**    | Neural Networks, Fixed-scale requirements. | Logistic Regression, SVM, PCA, KNN.       |
+
+---
+
+## **3. Examples**
+
+### **Input Data**
+| Feature1 | Feature2 | Feature3 |
+|----------|----------|----------|
+| 10       | 100      | -10      |
+| 20       | 200      | -5       |
+| 30       | 300      | 0        |
+| 40       | 400      | 5        |
+| 50       | 500      | 10       |
+
+### **Normalized Data**
+| Feature1 | Feature2 | Feature3 |
+|----------|----------|----------|
+| 0.00     | 0.00     | 0.00     |
+| 0.25     | 0.25     | 0.25     |
+| 0.50     | 0.50     | 0.50     |
+| 0.75     | 0.75     | 0.75     |
+| 1.00     | 1.00     | 1.00     |
+
+### **Standardized Data**
+| Feature1  | Feature2  | Feature3  |
+|-----------|-----------|-----------|
+| -1.41     | -1.41     | -1.41     |
+| -0.71     | -0.71     | -0.71     |
+|  0.00     |  0.00     |  0.00     |
+|  0.71     |  0.71     |  0.71     |
+|  1.41     |  1.41     |  1.41     |
+
+---
+
+## **4. Choosing the Right Technique**
+
+### **When to Use Normalization**
+- The feature's absolute values matter, and the scale needs to be fixed (e.g., [0, 1]).
+- **Applications**:
+  - Neural Networks (e.g., for stable training in input layers).
+  - Data visualization where all features must be scaled proportionally.
+
+### **When to Use Standardization**
+- The feature's distribution is important (e.g., mean and variance).
+- **Applications**:
+  - Linear models like Logistic Regression, SVM, KNN.
+  - PCA or other techniques sensitive to variance.
+
+---
+
+## **5. Practical Insights**
+
+- **Outliers**:
+  - Normalization is highly sensitive to outliers since it uses `min` and `max` values.
+  - Standardization is less sensitive because it focuses on the mean and standard deviation.
+
+- **Model Requirements**:
+  - Many models (e.g., neural networks) require input data to be normalized.
+  - Standardization is essential for models that rely on distances (e.g., KNN, SVM).
+
+---
+
+### **Conclusion**
+
+- Use **Normalization** when all features need to be scaled to a fixed range (e.g., 0-1).
+- Use **Standardization** when the distribution of data (mean and variance) is important, especially for distance-based or linear models.
+
+Both techniques have their use cases, and the choice depends on the specific problem and model requirements. 😊
 
 
-## 🛠️ Tech Stack
+
+
+
+---
+
+🛠️ 
+## Tech Stack
 
 ### Programming Languages
 - **Python**: Core programming language used for data analysis and visualization.
@@ -94,5 +218,8 @@ Restrictions:
 - **Jupyter Notebook**: Planning to implement
 
 ---
+
+
+
 
 
