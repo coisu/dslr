@@ -1,62 +1,167 @@
-1. House Comparison for a Specific Subject
-Objective: Compare the average grades of two different houses (e.g., Gryffindor and Slytherin) in a specific subject (e.g., Potions).
-Approach:
-Calculate the average grade for each house in the selected subject.
-Create a scatter plot where the x-axis represents the average grade of Gryffindor and the y-axis represents the average grade of Slytherin.
-Analyze the closeness of the points to determine similarity in performance.
-2. Correlation of Two Subjects
-Objective: Analyze the relationship between grades in two different subjects for all students.
-Approach:
-Select two subjects (e.g., Math and Potions).
-Create a scatter plot where each point represents a student, with the x-axis showing grades in Math and the y-axis showing grades in Potions.
-This plot will help visualize if students who perform well in one subject also perform well in another, indicating a similarity in performance across subjects.
-3. Individual Student Performance Across Subjects
-Objective: Evaluate the performance of individual students across multiple subjects.
-Approach:
-Calculate the total or average grade for each student across all subjects.
-Create a scatter plot where the x-axis represents the average grade across two selected subjects (e.g., Math and Charms) for each student.
-Each point represents a student, helping identify whether there are similarities in their performance across these subjects.
-4. Trends in Performance by Age or Birthday
-Objective: Investigate if there is a similarity in performance based on age or birthday.
-Approach:
-Extract the age of students from their birthdates.
-Plot a scatter plot where the x-axis represents age and the y-axis represents grades in a specific subject (e.g., Defense Against the Dark Arts).
-This will help analyze if students of similar ages perform similarly in that subject.
-5. Comparison of Two Groups (e.g., by Gender)
-Objective: Compare performance between two demographic groups (e.g., male and female students) in a specific subject.
-Approach:
-Select a subject and calculate the average grades for male and female students.
-Create a scatter plot where the x-axis represents average grades of male students and the y-axis represents average grades of female students.
-This allows you to visualize and analyze performance differences or similarities between the two groups.
-6. Comparison of Student Birthdays Across Houses
-Objective: Analyze if there are similarities in the distribution of birthdays among students from different houses (e.g., Gryffindor vs. Slytherin).
-Approach:
-Convert students' birth dates into a numeric format (e.g., days of the year).
-Create a scatter plot where the x-axis represents the birthday (day of the year) of Gryffindor students and the y-axis represents the birthday of Slytherin students.
-This will help visualize any patterns or similarities in birthday distributions between the two houses.
-7. Age Distribution of Students in Each House
-Objective: Compare the ages of students across different houses.
-Approach:
-Calculate the age of each student based on their birthday.
-Create a scatter plot where the x-axis represents the ages of Gryffindor students and the y-axis represents the ages of Slytherin students.
-This will help determine if the age distributions are similar between the two houses.
-8. Performance by Birth Month
-Objective: Analyze the average performance in a specific subject based on the month of birth.
-Approach:
-Group students by the month of their birthday and calculate the average grade for a subject (e.g., Potions).
-Create a scatter plot where the x-axis represents the month (numeric representation, e.g., 1 for January, 2 for February) and the y-axis represents the average grade for that month.
-This helps visualize if students born in certain months perform similarly.
-9. Birthday Month vs. Average Grades
-Objective: Investigate the relationship between the month of birth and overall average grades.
-Approach:
-Calculate the average grades for students based on their birthday month.
-Create a scatter plot where the x-axis represents the month of birth and the y-axis represents the overall average grade.
-This can show whether students born in certain months tend to have higher or lower grades, indicating a potential similarity.
-10. Correlation of Multiple Courses by Birthday
-Objective: Examine whether students born in the same month perform similarly across multiple subjects.
-Approach:
-Calculate the average grades across multiple subjects for each student and categorize them by their birth month.
-Create a scatter plot where the x-axis represents the average grades in one subject (e.g., Defense Against the Dark Arts) and the y-axis represents the average grades in another subject (e.g., Transfiguration), color-coded by birthday month.
-This will help visualize any patterns in performance among students born in the same month across different subjects.
-11. Comparison of Top 25% Scored Students Across Subjects
-Objective: Analyze and compare the top 25% scored students in each subject, which can be done either by grouping them by house or considering all students together.
+import sys
+import os
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from utils import load_dataset
+
+# feature1 and feature2 are the names of the features to plot(x and y axis)
+def plot_scatter(data, feature1, feature2, output_path="scatter_plot.png"):
+    
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    
+    house_colors = {
+        "Gryffindor": "red",
+        "Hufflepuff": "orange",
+        "Ravenclaw": "blue",
+        "Slytherin": "green"
+    }
+
+    plt.figure(figsize=(8, 6))  # Create matplotlib figure object for graph. Set the size of the plot(8x6 inches)
+    for house in data['Hogwarts House'].unique():
+        subset = data[data['Hogwarts House'] == house]
+        plt.scatter(subset[feature1], subset[feature2], label=house, alpha=0.5, s=10, color=house_colors.get(house, "gray"))
+
+    plt.title(f"Scatter Plot: {feature1} vs {feature2}") # Set the title of the plot
+    plt.xlabel(feature1) # Set the label (name) of the x-axis
+    plt.ylabel(feature2) # Set the label (name) of the y-axis
+    plt.legend(title="Hogwarts House")  # Add a legend to the plot
+    plt.grid(True) # Add a grid to the plot
+    # plt.show()
+    plt.savefig(output_path, format='png', dpi=300)
+    print(f"Scatter plot saved to {output_path}")
+
+# data = pandas DataFrame
+def find_most_similar_features(data, scale_data=False):
+
+    exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
+    numeric_data = data.drop(columns=exclude_columns, errors='ignore').select_dtypes(include=[np.number])
+
+    # check the Readme.md on github, 'Feature Scaling' section
+    if scale_data:
+        scaler = StandardScaler()   # Create a StandardScaler object
+        numeric_data = pd.DataFrame(scaler.fit_transform(numeric_data), columns=numeric_data.columns)
+        # fit : Compute the mean and std to be used for later scaling.
+        # transform : Perform standardization by centering and scaling
+        # fit_transform : Fit to data, then transform it.
+
+        # scaler.fit_transform(numeric_data) returns a numpy array, so we convert it back to a pandas DataFrame
+        # numpy array has no columns, no index, so we need to specify them
+        # convert the numpy array to a pandas DataFrame with the same columns and index as numeric_data
+        # scaled_array = scaler.fit_transform(numeric_data)
+        # numeric_data = pd.DataFrame(scaled_array, columns=numeric_data.columns, index=numeric_data
+
+    correlation_matrix = numeric_data.corr()    # Compute the correlation matrix
+                                                # Calculate the correlation between each pair of features(colums)
+                                                # correlation_matrix is a pandas DataFrame
+                                                
+    np.fill_diagonal(correlation_matrix.values, 0)
+    correlation_matrix.to_csv("correlation_matrix.csv")
+    print("Correlation matrix saved to correlation_matrix.csv")
+    # correlation_matrix.values[[range(len(correlation_matrix))]*2] = 0   # Exclude self-correlation
+                                                                        # correlation_matrix.value returns a numpy array
+                                                                        # len(correlation_matrix) returns the number of features(columns): if n=3
+                                                                        # range(len(correlation_matrix)) returns a list of indices: [0, 1, 2]
+                                                                        # [range(len(correlation_matrix))]*2 is diagonal indices: [[0, 1, 2], [0, 1, 2]]
+                                                                        # correlation_matrix.values[[0, 1, 2], [0, 1, 2]] = 0
+                                                                        # diagonal elements are self-correlation, so we set them to 0: (0, 0), (1, 1), (2, 2)
+                                                                        # 
+    return correlation_matrix.unstack().idxmax()    # Return the maximum correlation (the pair with the highest correlation)
+                                                    # correlation_matrix.unstack() converts a 2D correlation matrix to a 1D Series
+                                                    # idxmax() returns the index(name) of the first pair of the maximum value
+
+# Example matrix
+# matrix = np.array([
+#     [1, 0.5, 0.3],
+#     [0.5, 1, 0.8],
+#     [0.3, 0.8, 1]
+# ])
+# matrix[[range(3)]*2] = 0
+# correlation_matrix.values[0, 0] = 0
+# correlation_matrix.values[1, 1] = 0
+# correlation_matrix.values[2, 2] = 0
+# [[0.0 0.5 0.3]
+#  [0.5 0.0 0.8]
+#  [0.3 0.8 0.0]]
+
+# Unstacked Correlation Matrix:
+# Feature1  Feature1    0.0
+#           Feature2    0.8
+#           Feature3    0.6
+# Feature2  Feature1    0.8
+#           Feature2    0.0
+#           Feature3    0.7
+# Feature3  Feature1    0.6
+#           Feature2    0.7
+#           Feature3    0.0
+# dtype: float64
+# idxmax() returns the index of the first maximum value: (Feature2, Feature1) or (Feature1, Feature2)
+
+def save_standardized_data(data, output_path="standardized_data.csv"):
+    exclude_columns = {"First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
+    numeric_data = data.drop(columns=exclude_columns, errors='ignore').select_dtypes(include=[np.number])
+    numeric_data.to_csv("original_numeric_data.csv", index=False)
+    print("Original numeric data saved to original_numeric_data.csv")
+
+    scaler = StandardScaler()
+    standardized_data = pd.DataFrame(
+        scaler.fit_transform(numeric_data),
+        columns=numeric_data.columns
+    )
+    standardized_data.to_csv(output_path, index=False)
+    print(f"Standardized data saved to {output_path}")
+
+    return standardized_data
+
+def find_top_n_similar_features(data, n=78, scale_data=False):
+    exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
+    numeric_data = data.drop(columns=exclude_columns, errors='ignore').select_dtypes(include=[np.number])
+
+    if scale_data:
+        scaler = StandardScaler()
+        numeric_data = pd.DataFrame(scaler.fit_transform(numeric_data), columns=numeric_data.columns)
+    
+    correlation_matrix = numeric_data.corr()
+    np.fill_diagonal(correlation_matrix.values, 0)  # Set self-correlation to 0
+
+    # Flatten the correlation matrix and sort by values
+    sorted_correlation = (
+        correlation_matrix.unstack()
+        .sort_values(ascending=False)
+        .drop_duplicates()
+    )
+
+    print("\nSorted Correlation (Descending Order):")
+    print(sorted_correlation)
+
+    # Get the top N feature pairs
+    top_n_pairs = sorted_correlation.head(n).index.tolist()
+
+    return top_n_pairs
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python scatter_plot.py <file_path>")
+        sys.exit(1)
+
+    file_path = sys.argv[1]
+    data = load_dataset(file_path)
+    if data is None:
+        sys.exit(1)
+    save_standardized_data(data)
+
+    # feature1, feature2 = find_most_similar_features(data, scale_data=True)
+    # print(f"The most similar features are: {feature1} and {feature2}")
+
+    # output_path = "scatter_plot.png"
+    # plot_scatter(data, feature1, feature2, output_path=output_path)
+    top_pairs = find_top_n_similar_features(data, n=78, scale_data=True)
+    print("Top 3 feature pairs with the highest correlation:")
+    for rank, (feature1, feature2) in enumerate(top_pairs, start=1):
+        print(f"{rank}. {feature1} and {feature2}")
+
+        # Generate scatter plot for each pair
+        output_dir = "scatter_plots"
+        output_path = os.path.join(output_dir, f"scatter_plot_top_{rank}.png")
+        plot_scatter(data, feature1, feature2, output_path=output_path)

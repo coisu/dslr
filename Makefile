@@ -30,7 +30,9 @@ clean:
 	@docker network prune -f
 
 fclean: down clean
-	@rm -rf histograms
+	@sudo rm -rf histograms
+	@sudo rm -rf scatter_plots
+	@sudo rm -rf correlation_matrix.csv original_numeric_data.csv standardized_data.csv
 	@echo "Deleted histograms directory"
 	@docker images -q dslr | xargs -r docker rmi
 	@echo "Deleted dslr image"
