@@ -114,7 +114,7 @@ def save_standardized_data(data, output_path="standardized_data.csv"):
 
     return standardized_data
 
-def find_top_n_similar_features(data, n=78, scale_data=False):
+def find_top_n_similar_features(data, n=3, scale_data=False):
     exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
     numeric_data = data.drop(columns=exclude_columns, errors='ignore').select_dtypes(include=[np.number])
 
@@ -130,17 +130,17 @@ def find_top_n_similar_features(data, n=78, scale_data=False):
         correlation_matrix.unstack()
         .reset_index()
         .drop_duplicates(subset=0, keep="last")
-        .rename(columns={0: "correlation", "level_0": "feature_1", "level_1": "feature_2"})
+        .rename(columns={0: "correlation", "level_0": "subject_1", "level_1": "subject_2"})
     )
     sorted_correlation = sorted_correlation[
-        sorted_correlation["feature_1"] != sorted_correlation["feature_2"]
+        sorted_correlation["subject_1"] != sorted_correlation["subject_2"]
     ].sort_values(by="correlation", ascending=False)
 
     print("\nSorted Correlation (Descending Order):")
     print(sorted_correlation)
 
     # Get the top N feature pairs
-    top_n_pairs = sorted_correlation.head(n)[["feature_1", "feature_2"]].values.tolist()
+    top_n_pairs = sorted_correlation.head(n)[["subject_1", "subject_2"]].values.tolist()
 
     return top_n_pairs
 
@@ -160,7 +160,7 @@ if __name__ == "__main__":
 
     # output_path = "scatter_plot.png"
     # plot_scatter(data, feature1, feature2, output_path=output_path)
-    top_pairs = find_top_n_similar_features(data, n=78, scale_data=True)
+    top_pairs = find_top_n_similar_features(data, n=3, scale_data=True)
     print("Top 3 feature pairs with the highest correlation:")
     for rank, (feature1, feature2) in enumerate(top_pairs, start=1):
         print(f"{rank}. {feature1} and {feature2}")
