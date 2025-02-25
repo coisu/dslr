@@ -25,12 +25,14 @@ down:
 	@docker ps -a -q --filter "ancestor=dslr" | xargs -r docker rm
 
 clean:
-	@docker images -q --filter "dangling=true" | xargs -r docker rmi
+	@docker images -fq --filter "dangling=true" | xargs -r docker rmi
 	@docker volume prune -f
 	@docker network prune -f
 
 fclean: down clean
 	@rm -rf histograms
+	@rm -rf scatter_plots
+	@rm -rf correlation_matrix.csv original_numeric_data.csv standardized_data.csv
 	@echo "Deleted histograms directory"
 	@docker images -q dslr | xargs -r docker rmi
 	@echo "Deleted dslr image"
