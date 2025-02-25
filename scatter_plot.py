@@ -126,18 +126,41 @@ def find_top_n_similar_features(data, n=3, scale_data=False):
     np.fill_diagonal(correlation_matrix.values, 0)  # Set self-correlation to 0
 
     # Flatten the correlation matrix and sort by values
+# IF you wanna see the process, comment out line:130 - 141 and uncomment line:143 - 163
     sorted_correlation = (
         correlation_matrix.unstack()
         .reset_index()
         .drop_duplicates(subset=0, keep="last")
         .rename(columns={0: "correlation", "level_0": "subject_1", "level_1": "subject_2"})
-    )
+        )
     sorted_correlation = sorted_correlation[
         sorted_correlation["subject_1"] != sorted_correlation["subject_2"]
-    ].sort_values(by="correlation", ascending=False)
+        ].sort_values(by="correlation", ascending=False)
 
     print("\nSorted Correlation (Descending Order):")
     print(sorted_correlation)
+
+    # sorted_correlation = (
+    #     correlation_matrix.unstack()
+    #     .reset_index()
+    # )
+    # print("\n[1] Flatten matrix:")
+    # print(sorted_correlation)
+
+    # sorted_correlation = (
+    #     correlation_matrix.unstack()
+    #     .reset_index()
+    #     .drop_duplicates(subset=0, keep="last")
+    #     .rename(columns={0: "correlation", "level_0": "subject_1", "level_1": "subject_2"})
+    # )
+    # sorted_correlation = sorted_correlation[
+    #     sorted_correlation["subject_1"] != sorted_correlation["subject_2"]
+    # ]
+    # print("\n[2] Dropped Duplicated Pairs:")
+    # print(sorted_correlation)
+    # sorted_correlation = sorted_correlation.sort_values(by="correlation", ascending=False)
+    # print("\nFinal Sorted Correlation (Descending Order):")
+    # print(sorted_correlation)
 
     # Get the top N feature pairs
     top_n_pairs = sorted_correlation.head(n)[["subject_1", "subject_2"]].values.tolist()
