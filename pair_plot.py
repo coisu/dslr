@@ -7,20 +7,33 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 from utils import load_dataset
 
+
 def compute_manual_correlation(data):
+    """
+    Compute Pearson correlation manually between all numerical features.
+    Returns a dictionary of feature pairs with their correlation values.
+    """
     correlation_results = {}
     features = data.columns
-    
+
     for i in range(len(features)):
-        for j in range(i + 1, len(features)):
-            feature1, feature2 = features[i], features[j]
-            x, y = data[feature1].values, data[feature2].values
-            mean_x, mean_y = np.mean(x), np.mean(y)
-            numerator = np.sum((x - mean_x) * (y - mean_y))
-            denominator = np.sqrt(np.sum((x - mean_x) ** 2) * np.sum((y - mean_y) ** 2))
+        for j in range(i + 1, len(features)):  # Avoid duplicate pairs
+            feature1 = features[i]
+            feature2 = features[j]
+
+            # Compute Pearson correlation manually (without built-in functions)
+            x = data[feature1].values
+            y = data[feature2].values
+
+            mean_x = sum(x) / len(x)
+            mean_y = sum(y) / len(y)
+
+            numerator = sum((x - mean_x) * (y - mean_y))
+            denominator = (sum((x - mean_x) ** 2) * sum((y - mean_y) ** 2)) ** 0.5
+
             correlation = numerator / denominator if denominator != 0 else 0
             correlation_results[(feature1, feature2)] = correlation
-    
+
     return correlation_results
 
 def plot_pair(data, output_path="pair_plot.png"):
@@ -40,8 +53,8 @@ def plot_pair(data, output_path="pair_plot.png"):
     scaler = StandardScaler()
     scaled_data = pd.DataFrame(scaler.fit_transform(numeric_data), columns=numeric_data.columns)
 
-    print("Scaled data oreview:")
-    print(scaled_data.head())
+    # print("Scaled data oreview:")
+    # print(scaled_data.head())
 
     # Ensure "Hogwarts House" is treated as a categorical variable
     if "Hogwarts House" in data.columns:
