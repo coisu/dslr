@@ -1,11 +1,11 @@
 import pandas as pd
 
-def load_dataset(file_path):
+def load_dataset(file_path, index_col=None):
     """
     Load a CSV file and return it as a pandas DataFrame.
     """
     try:
-        data = pd.read_csv(file_path)
+        data = pd.read_csv(file_path, index_col=index_col)
         return data
 
     except FileNotFoundError:

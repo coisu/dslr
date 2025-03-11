@@ -71,8 +71,9 @@ if __name__ == "__main__":
         sys.exit(1)
     
     file_path = sys.argv[1]
-    data = load_dataset(file_path)
-    
+
+    data = load_dataset(file_path, 'Index')
+
     if data is None:
         sys.exit(1)
     

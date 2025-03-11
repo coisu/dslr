@@ -121,7 +121,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     dataset_path = sys.argv[1]
-    data = load_dataset(dataset_path)
+    data = load_dataset(dataset_path, 'Index')
 
     if data is None:
         print("Failed to load the dataset.")
