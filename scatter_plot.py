@@ -114,7 +114,7 @@ def save_standardized_data(data, output_path="standardized_data.csv"):
 
     return standardized_data
 
-def find_top_n_similar_features(data, n=3, scale_data=False):
+def find_top_n_similar_features(data, n=40, scale_data=False):
     exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
     numeric_data = data.drop(columns=exclude_columns, errors='ignore').select_dtypes(include=[np.number])
 
@@ -173,7 +173,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     file_path = sys.argv[1]
-    data = load_dataset(file_path)
+    data = load_dataset(file_path, 'Index')
     if data is None:
         sys.exit(1)
     save_standardized_data(data)
@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
     # output_path = "scatter_plot.png"
     # plot_scatter(data, feature1, feature2, output_path=output_path)
-    top_pairs = find_top_n_similar_features(data, n=3, scale_data=True)
+    top_pairs = find_top_n_similar_features(data, n=40, scale_data=True)
     print("Top 3 feature pairs with the highest correlation:")
     for rank, (feature1, feature2) in enumerate(top_pairs, start=1):
         print(f"{rank}. {feature1} and {feature2}")
