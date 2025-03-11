@@ -32,23 +32,24 @@ def plot_pair(data, output_path="pair_plot.png"):
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
     
     exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
-    numeric_data = data.drop(columns=exclude_columns, errors="ignore").select_dtypes(include=['number'])
+    numeric_data = data.drop(columns=exclude_columns, errors="ignore").select_dtypes(include=[np.number])
     
     # Handle missing values (NaN): Fill NaN values with the mean of the column
-    numeric_data = numeric_data.fillna(numeric_data.mean())  # Fill missing values with column means
+    numeric_data = numeric_data.dropna(subset=numeric_data.columns)
+    # numeric_data = numeric_data.fillna(numeric_data.mean())  # Fill missing values with column means
     # Scale numbers
     scaler = StandardScaler()
-    scaled_data = pd.DataFrame(scaler.fit_transform(numeric_data), columns=numeric_data.columns)
-
+    numeric_data = pd.DataFrame(scaler.fit_transform(numeric_data), columns=numeric_data.columns)
+    numeric_data.to_csv("standardized_data2.csv", index=True)
     print("Scaled data oreview:")
-    print(scaled_data.head())
+    print(numeric_data.head())
 
     # Ensure "Hogwarts House" is treated as a categorical variable
     if "Hogwarts House" in data.columns:
-        scaled_data["Hogwarts House"] = data["Hogwarts House"]
+        numeric_data["Hogwarts House"] = data["Hogwarts House"]
     
     # Compute manual correlation
-    correlation_results = compute_manual_correlation(scaled_data.drop(columns=["Hogwarts House"], errors="ignore"))
+    correlation_results = compute_manual_correlation(numeric_data.drop(columns=["Hogwarts House"], errors="ignore"))
     sorted_correlation = sorted(correlation_results.items(), key=lambda x: abs(x[1]), reverse=True)
     
     # Print top correlated feature pairs
@@ -57,7 +58,7 @@ def plot_pair(data, output_path="pair_plot.png"):
         print(f"{feature1} & {feature2}: {corr:.3f}")
     
     # Pair plot with seaborn
-    pair_plot = sns.pairplot(scaled_data, hue="Hogwarts House", palette={"Gryffindor": "red", 
+    pair_plot = sns.pairplot(numeric_data, hue="Hogwarts House", palette={"Gryffindor": "red", 
                                                                          "Slytherin": "green", 
                                                                          "Ravenclaw": "blue", 
                                                                          "Hufflepuff": "orange"})

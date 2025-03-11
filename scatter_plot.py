@@ -114,7 +114,7 @@ def save_standardized_data(data, output_path="standardized_data.csv"):
 
     return standardized_data
 
-def find_top_n_similar_features(data, n=5, scale_data=False):
+def find_top_n_similar_features(data, n=5, scale_data=True):
     exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
     numeric_data = data.drop(columns=exclude_columns, errors='ignore').select_dtypes(include=[np.number])
 
@@ -182,7 +182,7 @@ if __name__ == "__main__":
     data = load_dataset(file_path, 'Index')
     if data is None:
         sys.exit(1)
-    save_standardized_data(data)
+    # save_standardized_data(data)
 
     # feature1, feature2 = find_most_similar_features(data, scale_data=True)
     # print(f"The most similar features are: {feature1} and {feature2}")
