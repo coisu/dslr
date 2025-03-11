@@ -114,7 +114,7 @@ def save_standardized_data(data, output_path="standardized_data.csv"):
 
     return standardized_data
 
-def find_top_n_similar_features(data, n=40, scale_data=False):
+def find_top_n_similar_features(data, n=5, scale_data=False):
     exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
     numeric_data = data.drop(columns=exclude_columns, errors='ignore').select_dtypes(include=[np.number])
 
@@ -122,6 +122,12 @@ def find_top_n_similar_features(data, n=40, scale_data=False):
         scaler = StandardScaler()
         numeric_data = pd.DataFrame(scaler.fit_transform(numeric_data), columns=numeric_data.columns)
     
+    print("Standardized Data Preview: ")
+    print(numeric_data.head())
+    numeric_data.to_csv("standardized_data.csv", index=True)
+    print("\n✅ Standardized data saved to standardized_data.csv")
+
+
     correlation_matrix = numeric_data.corr()
     np.fill_diagonal(correlation_matrix.values, 0)  # Set self-correlation to 0
 
@@ -140,7 +146,7 @@ def find_top_n_similar_features(data, n=40, scale_data=False):
     print("\nSorted Correlation (Descending Order):")
     print(sorted_correlation)
 
-    # sorted_correlation = (
+# sorted_correlation = (
     #     correlation_matrix.unstack()
     #     .reset_index()
     # )
@@ -162,7 +168,7 @@ def find_top_n_similar_features(data, n=40, scale_data=False):
     # print("\nFinal Sorted Correlation (Descending Order):")
     # print(sorted_correlation)
 
-    # Get the top N feature pairs
+# Get the top N feature pairs
     top_n_pairs = sorted_correlation.head(n)[["subject_1", "subject_2"]].values.tolist()
 
     return top_n_pairs
@@ -183,7 +189,7 @@ if __name__ == "__main__":
 
     # output_path = "scatter_plot.png"
     # plot_scatter(data, feature1, feature2, output_path=output_path)
-    top_pairs = find_top_n_similar_features(data, n=40, scale_data=True)
+    top_pairs = find_top_n_similar_features(data, n=5, scale_data=True)
     print("Top 3 feature pairs with the highest correlation:")
     for rank, (feature1, feature2) in enumerate(top_pairs, start=1):
         print(f"{rank}. {feature1} and {feature2}")
