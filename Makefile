@@ -18,6 +18,10 @@ scatter_plot:
 pair_plot:
 	@docker run -it -v $(PWD):/app dslr python3 pair_plot.py datasets/dataset_train.csv
 
+magic_hat:
+	@docker run -it -v $(PWD):/app dslr python3 pair_plot.py datasets/dataset_train.csv
+
+
 # Run with Jupyter Notebook
 notebook:
 	@docker run -it -p 8888:8888 -v $(PWD):/app dslr jupyter notebook --ip=0.0.0.0 --allow-root --no-browser
