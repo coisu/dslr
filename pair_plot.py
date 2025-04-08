@@ -29,6 +29,7 @@ def plot_pair(data, output_path="pair_plot.png"):
     print("\n\n>> Scaled data oreview:")
     print(numeric_data.head())
 
+
     # Ensure "Hogwarts House" is treated as a categorical variable
     if "Hogwarts House" in data.columns:
         numeric_data["Hogwarts House"] = data["Hogwarts House"]
