@@ -5,8 +5,9 @@ run: make
 	@docker run -it -v $(PWD):/app dslr
 
 test: 
-	@docker run -it -v $(PWD):/app dslr python3 describe.py datasets/standardized_data.csv
-	# @docker run -it -v $(PWD):/app dslr python3 describe.py datasets/dataset_train.csv
+	# @docker run -it -v $(PWD):/app dslr python3 describe.py datasets/standardized_data.csv
+	# @docker run -it -v $(PWD):/app dslr python3 describe.py datasets/standardized_data2.csv
+	@docker run -it -v $(PWD):/app dslr python3 describe.py datasets/dataset_train.csv
 
 histogram:
 	@docker run -it -v $(PWD):/app dslr python3 histogram.py datasets/dataset_train.csv

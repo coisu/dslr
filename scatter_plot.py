@@ -4,7 +4,7 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from utils import load_dataset
+from utils import load_dataset, compute_manual_correlation
 
 # feature1 and feature2 are the names of the features to plot(x and y axis)
 def plot_scatter(data, feature1, feature2, output_path="scatter_plot.png"):
@@ -32,72 +32,6 @@ def plot_scatter(data, feature1, feature2, output_path="scatter_plot.png"):
     plt.savefig(output_path, format='png', dpi=300)
     print(f"Scatter plot saved to {output_path}")
 
-# data = pandas DataFrame
-def find_most_similar_features(data, scale_data=False):
-
-    exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
-    numeric_data = data.drop(columns=exclude_columns, errors='ignore').select_dtypes(include=[np.number])
-
-    # check the Readme.md on github, 'Feature Scaling' section
-    if scale_data:
-        scaler = StandardScaler()   # Create a StandardScaler object
-        numeric_data = pd.DataFrame(scaler.fit_transform(numeric_data), columns=numeric_data.columns)
-        # fit : Compute the mean and std to be used for later scaling.
-        # transform : Perform standardization by centering and scaling
-        # fit_transform : Fit to data, then transform it.
-
-        # scaler.fit_transform(numeric_data) returns a numpy array, so we convert it back to a pandas DataFrame
-        # numpy array has no columns, no index, so we need to specify them
-        # convert the numpy array to a pandas DataFrame with the same columns and index as numeric_data
-        # scaled_array = scaler.fit_transform(numeric_data)
-        # numeric_data = pd.DataFrame(scaled_array, columns=numeric_data.columns, index=numeric_data
-
-    correlation_matrix = numeric_data.corr()    # Compute the correlation matrix
-                                                # Calculate the correlation between each pair of features(colums)
-                                                # correlation_matrix is a pandas DataFrame
-                                                
-    np.fill_diagonal(correlation_matrix.values, 0)
-    correlation_matrix.to_csv("correlation_matrix.csv")
-    print("Correlation matrix saved to correlation_matrix.csv")
-    # correlation_matrix.values[[range(len(correlation_matrix))]*2] = 0   # Exclude self-correlation
-                                                                        # correlation_matrix.value returns a numpy array
-                                                                        # len(correlation_matrix) returns the number of features(columns): if n=3
-                                                                        # range(len(correlation_matrix)) returns a list of indices: [0, 1, 2]
-                                                                        # [range(len(correlation_matrix))]*2 is diagonal indices: [[0, 1, 2], [0, 1, 2]]
-                                                                        # correlation_matrix.values[[0, 1, 2], [0, 1, 2]] = 0
-                                                                        # diagonal elements are self-correlation, so we set them to 0: (0, 0), (1, 1), (2, 2)
-                                                                        # 
-    return correlation_matrix.unstack().idxmax()    # Return the maximum correlation (the pair with the highest correlation)
-                                                    # correlation_matrix.unstack() converts a 2D correlation matrix to a 1D Series
-                                                    # idxmax() returns the index(name) of the first pair of the maximum value
-
-# Example matrix
-# matrix = np.array([
-#     [1, 0.5, 0.3],
-#     [0.5, 1, 0.8],
-#     [0.3, 0.8, 1]
-# ])
-# matrix[[range(3)]*2] = 0
-# correlation_matrix.values[0, 0] = 0
-# correlation_matrix.values[1, 1] = 0
-# correlation_matrix.values[2, 2] = 0
-# [[0.0 0.5 0.3]
-#  [0.5 0.0 0.8]
-#  [0.3 0.8 0.0]]
-
-# Unstacked Correlation Matrix:
-# Feature1  Feature1    0.0
-#           Feature2    0.8
-#           Feature3    0.6
-# Feature2  Feature1    0.8
-#           Feature2    0.0
-#           Feature3    0.7
-# Feature3  Feature1    0.6
-#           Feature2    0.7
-#           Feature3    0.0
-# dtype: float64
-# idxmax() returns the index of the first maximum value: (Feature2, Feature1) or (Feature1, Feature2)
-
 def save_standardized_data(data, output_path="standardized_data.csv"):
     exclude_columns = {"First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
     numeric_data = data.drop(columns=exclude_columns, errors='ignore').select_dtypes(include=[np.number])
@@ -114,7 +48,7 @@ def save_standardized_data(data, output_path="standardized_data.csv"):
 
     return standardized_data
 
-def find_top_n_similar_features(data, n=5, scale_data=False):
+def find_top_n_similar_features(data, n=5, scale_data=True):
     exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
     numeric_data = data.drop(columns=exclude_columns, errors='ignore').select_dtypes(include=[np.number])
 
@@ -127,51 +61,18 @@ def find_top_n_similar_features(data, n=5, scale_data=False):
     numeric_data.to_csv("standardized_data.csv", index=True)
     print("\n✅ Standardized data saved to standardized_data.csv")
 
-
-    correlation_matrix = numeric_data.corr()
-    np.fill_diagonal(correlation_matrix.values, 0)  # Set self-correlation to 0
-
-    # Flatten the correlation matrix and sort by values
-# IF you wanna see the process, comment out line:130 - 141 and uncomment line:143 - 163
-    sorted_correlation = (
-        correlation_matrix.unstack()
-        .reset_index()
-        .drop_duplicates(subset=0, keep="last")
-        .rename(columns={0: "correlation", "level_0": "subject_1", "level_1": "subject_2"})
-        )
-    sorted_correlation = sorted_correlation[
-        sorted_correlation["subject_1"] != sorted_correlation["subject_2"]
-        ].sort_values(by="correlation", ascending=False)
+    correlation_results = compute_manual_correlation(numeric_data)
+    sorted_correlation = sorted(correlation_results.items(), key=lambda x: abs(x[1]), reverse=True)
 
     print("\nSorted Correlation (Descending Order):")
-    print(sorted_correlation)
-
-# sorted_correlation = (
-    #     correlation_matrix.unstack()
-    #     .reset_index()
-    # )
-    # print("\n[1] Flatten matrix:")
-    # print(sorted_correlation)
-
-    # sorted_correlation = (
-    #     correlation_matrix.unstack()
-    #     .reset_index()
-    #     .drop_duplicates(subset=0, keep="last")
-    #     .rename(columns={0: "correlation", "level_0": "subject_1", "level_1": "subject_2"})
-    # )
-    # sorted_correlation = sorted_correlation[
-    #     sorted_correlation["subject_1"] != sorted_correlation["subject_2"]
-    # ]
-    # print("\n[2] Dropped Duplicated Pairs:")
-    # print(sorted_correlation)
-    # sorted_correlation = sorted_correlation.sort_values(by="correlation", ascending=False)
-    # print("\nFinal Sorted Correlation (Descending Order):")
-    # print(sorted_correlation)
+    for (subject_1, subject_2), corr in sorted_correlation[:n]:
+        print(f"{subject_1} & {subject_2} → correlation: {corr:.4f}")
 
 # Get the top N feature pairs
-    top_n_pairs = sorted_correlation.head(n)[["subject_1", "subject_2"]].values.tolist()
+    # top_n_pairs = sorted_correlation.head(n)[["subject_1", "subject_2"]].values.tolist()
+    top_n_pairs = [(subject_1, subject_2) for (subject_1, subject_2), _ in sorted_correlation[:n]]
 
-    return top_n_pairs
+    return top_n_pairs, numeric_data
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
@@ -182,19 +83,19 @@ if __name__ == "__main__":
     data = load_dataset(file_path, 'Index')
     if data is None:
         sys.exit(1)
-    save_standardized_data(data)
+    # save_standardized_data(data)
 
     # feature1, feature2 = find_most_similar_features(data, scale_data=True)
     # print(f"The most similar features are: {feature1} and {feature2}")
 
     # output_path = "scatter_plot.png"
     # plot_scatter(data, feature1, feature2, output_path=output_path)
-    top_pairs = find_top_n_similar_features(data, n=5, scale_data=True)
-    print("Top 3 feature pairs with the highest correlation:")
+    top_pairs, standardized_data = find_top_n_similar_features(data, n=5, scale_data=True)
+    print("Top 5 feature pairs with the highest correlation:")
     for rank, (feature1, feature2) in enumerate(top_pairs, start=1):
         print(f"{rank}. {feature1} and {feature2}")
 
         # Generate scatter plot for each pair
         output_dir = "scatter_plots"
         output_path = os.path.join(output_dir, f"scatter_plot_top_{rank}.png")
-        plot_scatter(data, feature1, feature2, output_path=output_path)
+        plot_scatter(standardized_data, feature1, feature2, output_path=output_path)
