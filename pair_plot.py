@@ -5,23 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
-from utils import load_dataset
-
-def compute_manual_correlation(data):
-    correlation_results = {}
-    features = data.columns
-    
-    for i in range(len(features)):
-        for j in range(i + 1, len(features)):
-            feature1, feature2 = features[i], features[j]
-            x, y = data[feature1].values, data[feature2].values
-            mean_x, mean_y = np.mean(x), np.mean(y)
-            numerator = np.sum((x - mean_x) * (y - mean_y))
-            denominator = np.sqrt(np.sum((x - mean_x) ** 2) * np.sum((y - mean_y) ** 2))
-            correlation = numerator / denominator if denominator != 0 else 0
-            correlation_results[(feature1, feature2)] = correlation
-    
-    return correlation_results
+from utils import load_dataset, compute_manual_correlation
 
 def plot_pair(data, output_path="pair_plot.png"):
     """
@@ -41,7 +25,8 @@ def plot_pair(data, output_path="pair_plot.png"):
     scaler = StandardScaler()
     numeric_data = pd.DataFrame(scaler.fit_transform(numeric_data), columns=numeric_data.columns)
     numeric_data.to_csv("standardized_data2.csv", index=True)
-    print("Scaled data oreview:")
+    print("\n✅ Standardized data saved to standardized_data2.csv")
+    print("\n\n>> Scaled data oreview:")
     print(numeric_data.head())
 
     # Ensure "Hogwarts House" is treated as a categorical variable
@@ -53,7 +38,7 @@ def plot_pair(data, output_path="pair_plot.png"):
     sorted_correlation = sorted(correlation_results.items(), key=lambda x: abs(x[1]), reverse=True)
     
     # Print top correlated feature pairs
-    print("\nTop feature correlations:")
+    print("\n\nTop feature correlations:")
     for (feature1, feature2), corr in sorted_correlation[:5]:
         print(f"{feature1} & {feature2}: {corr:.3f}")
     

@@ -1,34 +1,8 @@
 import sys
 import csv
 import numpy as np
-from utils import load_dataset
+from utils import load_dataset, calculate_mean, calculate_variance, calculate_std, calculate_percentile, is_float
 
-def calculate_mean(data):
-    return sum(data) / len(data)
-
-def calculate_variance(data, mean):
-    return sum((x - mean) ** 2 for x in data) / (len(data) - 1) if len(data) > 1 else 0
-
-def calculate_std(variance):
-    return variance ** 0.5  # math.sqrt(variance)
-
-def calculate_percentile(data, p):
-    sorted_data = sorted(data)
-    k = (len(sorted_data) - 1) * (p / 100)
-    f = int(k)
-    c = f + 1
-    if c < len(sorted_data):
-        return sorted_data[f] + (k - f) * (sorted_data[c] - sorted_data[f])
-    else:
-        return sorted_data[f]
-
-def is_float(value):
-    """is numeric data"""
-    try:
-        float(value)
-        return True
-    except ValueError:
-        return False
 
 def calculate_statistics(data):
     exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
@@ -78,9 +52,16 @@ if __name__ == "__main__":
         sys.exit(1)
     
     file_path = sys.argv[1]
+    print(f"\n\nCurrent File :: {file_path}\n\n")
     data = load_dataset(file_path, 'Index') # pd.DataFrame
     if data is None:
         print("Failed to load the dataset.")
         sys.exit(1)
     statistics = calculate_statistics(data) # dict
     print_statistics(statistics)
+
+    # for debugging
+    from describe import calculate_statistics
+
+    print("\n📌 pandas describe:")
+    print(data.describe().T)
