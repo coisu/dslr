@@ -17,6 +17,12 @@ from sklearn.preprocessing import StandardScaler
 from typing import Tuple, List
 
 
+# sigmoid Function
+# What matters isn't just a binary yes or no 
+# we want to know how likely it is that a student belongs to Gryffindor.
+# The sigmoid function transforms the model’s raw output into a probability between 0 and 1, 
+# which we then use to make our classification decision.
+
 
 def preprocess_data(data: pd.DataFrame, scaler) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
