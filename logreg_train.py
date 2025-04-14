@@ -27,6 +27,7 @@ from typing import Tuple, List
 # which we then use to make our classification decision.
 
 def sigmoid(z: np.ndarray) -> np.ndarray:
+    z = np.clip(z, -500, 500)  # Prevent overflow
     return 1 / (1 + np.exp(-z))
 
 def gradient_descent(X: np.ndarray, y: np.ndarray, theta: np.ndarray, alpha: float, num_iters: int) -> np.ndarray:
@@ -39,13 +40,14 @@ def gradient_descent(X: np.ndarray, y: np.ndarray, theta: np.ndarray, alpha: flo
 
 def train_one_vs_all(X: np.ndarray, y: np.ndarray, labels: np.ndarray, alpha: float = 0.01, num_iters: int = 1000) -> np.ndarray:
     m, n = X.shape
-    theta_matrix = np.zeros(len(labels, n))
+    theta_matrix = np.zeros((len(labels), n))
 
     for i, label in enumerate(labels):
         y_binary = (y == label).astype(int)
         theta = np.zeros(n)
         theta = gradient_descent(X, y_binary, theta, alpha, num_iters)
         theta_matrix[i] = theta
+    print("theta_matrix:\n", theta_matrix)
     return theta_matrix
 
 def preprocess_data(data: pd.DataFrame, scaler) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -53,6 +55,9 @@ def preprocess_data(data: pd.DataFrame, scaler) -> Tuple[np.ndarray, np.ndarray,
 
     y = data["Hogwarts House"]
     X = data.drop(columns=exclude_columns, errors="ignore").select_dtypes(include=[np.number])
+    
+    X = X.dropna()
+    y = y[X.index]
 
     X_scaled = scaler.fit_transform(X)
 
@@ -72,8 +77,15 @@ if __name__ == "__main__":
     
     scaler = StandardScaler()
 
-    X, y, class_labels = preprocess_data(data)
-    theta_matrix = train_one_vs_all()
+    X, y, class_labels = preprocess_data(data, scaler)
+    print("\n\n>>>\n")
+    print(np.unique(y, return_counts=True))
+
+    print("\n\nDebugging info:")
+    print("Any NaN in X:", np.isnan(X).any())
+    print("Any Inf in X:", np.isinf(X).any())
+
+    theta_matrix = train_one_vs_all(X, y, class_labels)
 
     os.makedirs("trained", exist_ok=True)
 

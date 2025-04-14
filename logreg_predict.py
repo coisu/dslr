@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     try:
         weights = np.load("trained/weights.npy")
-        class_labels = np.load("trained/class_labels.npy")
+        class_labels = np.load("trained/class_labels.npy", allow_pickle=True)
         with open("trained/scaler.pkl", "rb") as f:
             scaler = pickle.load(f)
     except Exception as e:
@@ -45,6 +45,11 @@ if __name__ == "__main__":
 
     index, X_test = preprocess_data(test_data, scaler)
     predictions = predict(X_test, weights, class_labels)
+
+    unique, counts = np.unique(predictions, return_counts=True)
+    print("\n\n>>>House Distribution:")
+    for house, count in zip(unique, counts):
+        print(f"{house}: {count}")
 
     df = pd.DataFrame({"Index": index, "Hogwarts House": predictions})
 
