@@ -18,8 +18,11 @@ scatter_plot:
 pair_plot:
 	@docker run -it -v $(PWD):/app dslr python3 pair_plot.py datasets/dataset_train.csv
 
+train:
+	@docker run -it -v $(PWD):/app dslr python3 logreg_train.py datasets/dataset_train.csv
+
 magic_hat:
-	@docker run -it -v $(PWD):/app dslr python3 pair_plot.py datasets/dataset_train.csv
+	@docker run -it -v $(PWD):/app dslr python3 logreg_predict.py datasets/dataset_test.csv
 
 
 # Run with Jupyter Notebook
