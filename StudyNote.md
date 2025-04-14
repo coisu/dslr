@@ -41,6 +41,55 @@ Each model outputs the **probability** that the input belongs to its specific cl
 
 ---
 
+
+## 4. Pickle
+### What is `pickle` used for in this project?
+
+  - In this project, we use `pickle` to save and load the `StandardScaler` object from `scikit-learn`.
+  - pickle allows us to save and restore Python objects exactly as they were.
+
+---
+
+#### Why do we use `pickle`?
+
+  - The model must apply the **same standardization rule** during both training and prediction.
+  - `StandardScaler` learns the **mean and standard deviation** of each feature during training.
+  - We save that trained scaler using `pickle`, so we can apply the same transformation to the test data during prediction.
+
+---
+
+#### What information is stored in `scaler.pkl`?
+
+When using:
+
+  ```python
+  scaler = StandardScaler()
+  X_scaled = scaler.fit_transform(X_train)
+
+  with open("trained/scaler.pkl", "wb") as f:
+      pickle.dump(scaler, f)
+  ```
+
+**The following internal data is saved inside scaler.pkl:
+
+| Attribute       | Meaning                                      |
+|------------------|-----------------------------------------------|
+| `scaler.mean_`   | Mean of each feature from the training data   |
+| `scaler.scale_`  | Standard deviation of each feature            |
+| `scaler.var_`    | Variance of each feature                      |
+| `scaler.n_features_in_` | Number of input features used to fit   |
+
+
+#### Load .pkl files
+
+  ```python
+  with open("trained/scaler.pkl", "rb") as f:
+    scaler = pickle.load(f)
+
+  X_test_scaled = scaler.transform(X_test)
+  ```
+
+
 ## ✅ TL;DR
 
 > Linear Regression is for **predicting numbers**.  

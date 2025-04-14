@@ -11,6 +11,9 @@
 import numpy as np
 import pandas as pd
 import sys
+import os
+import pickle
+
 from utils import load_dataset
 from sklearn.preprocessing import StandardScaler
 
@@ -23,12 +26,33 @@ from typing import Tuple, List
 # The sigmoid function transforms the model’s raw output into a probability between 0 and 1, 
 # which we then use to make our classification decision.
 
+def sigmoid(z: np.ndarray) -> np.ndarray:
+    return 1 / (1 + np.exp(-z))
+
+def gradient_descent(X: np.ndarray, y: np.ndarray, theta: np.ndarray, alpha: float, num_iters: int) -> np.ndarray:
+    m = len(y)
+    for _ in range(num_iters):
+        predictions = sigmoid(X @ theta)
+        gradient = (1 / m) * (X.T @ (predictions - y))
+        theta -= alpha * gradient
+    return theta
+
+def train_one_vs_all(X: np.ndarray, y: np.ndarray, labels: np.ndarray, alpha: float = 0.01, num_iters: int = 1000) -> np.ndarray:
+    m, n = X.shape
+    theta_matrix = np.zeros(len(labels, n))
+
+    for i, label in enumerate(labels):
+        y_binary = (y == label).astype(int)
+        theta = np.zeros(n)
+        theta = gradient_descent(X, y_binary, theta, alpha, num_iters)
+        theta_matrix[i] = theta
+    return theta_matrix
 
 def preprocess_data(data: pd.DataFrame, scaler) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
 
-    X = data.drop(columns=exclude_columns, errors="ignore").select_dtypes(include=[np.number])
     y = data["Hogwarts House"]
+    X = data.drop(columns=exclude_columns, errors="ignore").select_dtypes(include=[np.number])
 
     X_scaled = scaler.fit_transform(X)
 
@@ -51,9 +75,11 @@ if __name__ == "__main__":
     X, y, class_labels = preprocess_data(data)
     theta_matrix = train_one_vs_all()
 
-    np.save("weights.npy", theta_matrix)
-    np.save("class_labels.npy", class_labels)
-    with open("scaler.pkl", "wb") as f:
+    os.makedirs("trained", exist_ok=True)
+
+    np.save("trained/weights.npy", theta_matrix)        # Save weights
+    np.save("trained/class_labels.npy", class_labels)   # Save class labels (Gryffindor, Ravenclaw, Hufflepuff, Slytherin)
+    with open("trained/scaler.pkl", "wb") as f:         # standardize the data
         pickle.dump(scaler, f)
 
-    print("✅ Successfully model trained: weights.npy, class_labels.npy, scaler.pkl saved")
+    print("✅ Successfully model trained: weights.npy, class_labels.npy, scaler.pkl saved in trained/")
