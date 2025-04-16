@@ -38,7 +38,7 @@ def gradient_descent(X: np.ndarray, y: np.ndarray, theta: np.ndarray, alpha: flo
         theta -= alpha * gradient
     return theta
 
-def train_one_vs_all(X: np.ndarray, y: np.ndarray, labels: np.ndarray, alpha: float = 0.01, num_iters: int = 1000) -> np.ndarray:
+def train_one_vs_all(X: np.ndarray, y: np.ndarray, labels: np.ndarray, alpha: float = 0.05, num_iters: int = 5000) -> np.ndarray:
     m, n = X.shape
     theta_matrix = np.zeros((len(labels), n))
 
@@ -53,9 +53,19 @@ def train_one_vs_all(X: np.ndarray, y: np.ndarray, labels: np.ndarray, alpha: fl
 def preprocess_data(data: pd.DataFrame, scaler) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
 
+    # selected_features = [
+    #     "Astronomy",
+    #     "Defense Against the Dark Arts",
+    #     "History of Magic",
+    #     "Flying",
+    #     "Transfiguration",
+    #     "Muggle Studies",
+    #     "Charms"
+    # ]
+
     y = data["Hogwarts House"]
     X = data.drop(columns=exclude_columns, errors="ignore").select_dtypes(include=[np.number])
-    
+    # X = data[selected_features]
     X = X.dropna()
     y = y[X.index]
 
