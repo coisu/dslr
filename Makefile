@@ -24,6 +24,9 @@ train:
 magic_hat:
 	@docker run -it -v $(PWD):/app dslr python3 logreg_predict.py datasets/dataset_test.csv
 
+eval:
+	@docker run -it -v $(PWD):/app dslr python3 evaluate_prediction.py
+
 
 # Run with Jupyter Notebook
 notebook:
