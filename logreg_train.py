@@ -172,3 +172,8 @@ if __name__ == "__main__":
 #         pickle.dump(scaler, f)
 
 #     print("✅ Successfully model trained[explicit bias]: weights.npy, class_labels.npy, scaler.pkl saved in trained/")
+
+
+
+
+
