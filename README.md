@@ -8,33 +8,26 @@ Discover Data Science through this project by recreating the Hogwarts Sorting Ha
 
 
 ## Usage
-```
-git clone git@github.com:coisu/dslr.git
-cd dslr
+```bash
+  git clone git@github.com:coisu/dslr.git
+  cd dslr
 
-make
-
-<!-- describe -->
-make describe
-
-<!-- generate histograms -->
-make histogram
-
-<!-- generate scatter plots -->
-make scatter_plot
-
-<!-- generate pair plots -->
-make pair_plot
-
-<!-- training magic hat -->
-make train
-
-<!-- magic hat splits students -->
-make magic_hat
-
-<!-- accurancy test -->
-make eval
-
+  # Build Docker image
+  make         
+  # Show summary statistics for numeric features       
+  make describe
+  # Generate histograms
+  make histogram
+  # Scatter plots for top correlated feature pairs
+  make scatter_plot  
+  # Generate pair plots
+  make pair_plot      
+  # Train the Magic Hat
+  make train          
+  # The MAgic Hat assign students in Houses
+  make magic_hat    
+  # Accurancy evaluation  
+  make eval
 ```
 
 ## Task Sequence
