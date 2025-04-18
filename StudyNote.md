@@ -59,7 +59,10 @@ In logistic regression, the **bias term** (also called **intercept**) allows the
 
 ## 5. Gradient Descent Variants
 
-Gradient Descent is the optimization algorithm we use to **learn the weights** (`θ`) in logistic regression.
+Gradient Descent is a fundamental algorithm for optimizing model parameters in machine learning and deep learning. Below is a summary of the main types and the most commonly used methods in practice.
+
+> We are currently using **Batch Gradient Descent** to **learn the weights** (`θ`) in logistic regression.
+
 
 ### Currently Used: **Batch Gradient Descent**
 ```python
@@ -71,16 +74,26 @@ for _ in range(num_iters):
 - Computes gradient using **all samples** in every iteration.
 - Very stable, but slow for large datasets.
 
-### Other Common Variants
+---
 
-| Type                  | Description                                                                 |
-|-----------------------|-----------------------------------------------------------------------------|
-| **Stochastic Gradient Descent (SGD)** | Updates weights using **1 sample at a time** → faster, but noisier updates. |
-| **Mini-batch Gradient Descent**      | Compromise between batch and SGD: update weights using a **small subset (batch)** of samples. |
-| **Gradient Descent with Momentum**   | Adds a velocity term to smooth updates, helps escape local minima. |
-| **Adam Optimizer**                   | Adaptive learning rate optimizer, combining momentum and RMSProp techniques (very popular in deep learning). |
+### Basic Types of Gradient Descent
 
-> ✅ We are currently using **Batch Gradient Descent** with optional **L2 regularization** (`lambda_`), which is a solid, interpretable baseline for logistic regression.
+| Type                        | Description |
+|-----------------------------|-------------|
+| **Batch Gradient Descent**  | Uses the entire dataset to compute the gradient at each step. Most stable and simple but slow. |
+| **Stochastic Gradient Descent (SGD)** | Uses **one sample at a time** to compute the gradient. Fast but very noisy. |
+| **Mini-batch Gradient Descent** | Splits the data into **small batches** to compute the gradient. Balances speed and stability. |
+
+#### 🔍 Detailed Comparison
+
+| Feature           | Batch GD               | SGD                     | Mini-batch GD            |
+|-------------------|------------------------|--------------------------|---------------------------|
+| Data Used         | All data               | One sample               | Small batch (e.g., 32, 128) |
+| Speed             | Slow                   | Fast                     | Moderate                  |
+| Memory Efficiency | Low                    | Very high                | High                      |
+| Stability         | Very stable            | Very unstable (high variance) | Stable                |
+| Real-world Usage  | Less efficient        |  Used in special cases  |  **Most widely used**    |
+
 
 ---
 
