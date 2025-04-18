@@ -1,4 +1,15 @@
-datasets/dataset_truth.csv
-histograms/
 __pycache__/
+
+.vscode/
+*.swp
+
+outputs/
+trained/
+houses.csv
+
+datasets/dataset_truth.csv
+datasets.tgz
+
+.DS_Store
 *Zone.Identifier
+*~
