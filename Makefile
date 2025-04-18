@@ -44,10 +44,15 @@ clean:
 fclean: down clean
 	@rm -rf histograms
 	@rm -rf scatter_plots
+	@rm -rf pair_plots
+	@rm -rf datasets/standardized_data.csv standardized_data2.csv
 	@rm -rf correlation_matrix.csv original_numeric_data.csv standardized_data.csv
-	@echo "Deleted histograms directory"
+	@rm -rf trained houses.csv
+	@echo "Deleted histograms, scatter_plots, and intermediate CSV files"
+	@echo "Deleted trained model files and prediction output"
 	@docker images -q dslr | xargs -r docker rmi
-	@echo "Deleted dslr image"
+	@echo "Deleted dslr Docker image"
+
 
 re: fclean build
 
