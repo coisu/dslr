@@ -9,7 +9,7 @@ build:
 run:
 	@docker run -it -v $(PWD):/app dslr
 
-test:
+describe:
 	@docker run -it -v $(PWD):/app dslr python3 $(SCRIPTS)/describe.py $(DATA)/dataset_train.csv
 
 histogram:
