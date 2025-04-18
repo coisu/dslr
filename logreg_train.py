@@ -100,7 +100,7 @@ if __name__ == "__main__":
     with open("trained/scaler.pkl", "wb") as f:         # standardize the data
         pickle.dump(scaler, f)
 
-    print("✅ Successfully model trained: weights.npy, class_labels.npy, scaler.pkl saved in trained/")
+    print("✅ Successfully model trained[implicit bias]: weights.npy, class_labels.npy, scaler.pkl saved in trained/")
 
 
 
@@ -177,4 +177,4 @@ if __name__ == "__main__":
 #     with open("trained/scaler.pkl", "wb") as f:
 #         pickle.dump(scaler, f)
 
-#     print("✅ 전체 피처 + Batch GD + Bias 분리 방식 학습 완료. 결과 저장됨.")
+    # print("✅ Successfully model trained[explicit bias]: weights.npy, class_labels.npy, scaler.pkl saved in trained/")
