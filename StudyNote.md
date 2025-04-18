@@ -42,18 +42,40 @@ Each model outputs the **probability** that the input belongs to its specific cl
 
 ---
 
-## 4. Implicit Bias vs Explicit Bias
+## 4. Implicit Bias vs Explicit Bias in Logistic Regression
 
-In logistic regression, the **bias term** (also called **intercept**) allows the model to shift the decision boundary.
+In logistic regression, the **bias term** (intercept) allows the model to shift the decision boundary. There are two main ways to handle it: **Implicit Bias** (bias as part of the weight vector) and **Explicit Bias** (bias as a separate parameter). Below is a detailed comparison.
 
-| Type              | Description                                                                 |
-|-------------------|-----------------------------------------------------------------------------|
-| **Implicit Bias** | Add a column of 1s to the input features (e.g., `X_with_bias = [1, x₁, x₂, ...]`) and learn `θ₀` as part of `θ`. |
-| **Explicit Bias** | Keep bias as a separate variable `b` and compute prediction as `z = Xwᵀ + b`. |
+### Characteristics
 
-### Differences:
-- **Implicit**: Bias is handled as part of the weight vector and requires special care to **exclude it from regularization** (`reg_term[0] = 0`).
-- **Explicit**: Bias is handled separately and is **not included in L2 regularization** by default, making the code more readable and less error-prone.
+| Feature        | Implicit Bias (`theta[0]`)                         | Explicit Bias (`b`)                             |
+|----------------|-----------------------------------------------------|--------------------------------------------------|
+| Bias Location  | Included as `theta[0]` via prepending column of 1s | Stored as a separate scalar variable `b`         |
+| Feature Matrix | Modified to include bias column                    | Remains unchanged                                |
+| Regularization | Needs manual exclusion of `theta[0]`               | Naturally excluded from regularization           |
+| Prediction     | `sigmoid(X @ theta)`                               | `sigmoid(X @ w.T + b)`                           |
+| Storage        | Bias is part of the weight vector                  | Bias is clearly separated                        |
+| Debuggability  | Harder to isolate bias                             | Easier to inspect and manipulate               |
+| Common Usage   | Educational settings, basic numpy implementations  | PyTorch, TensorFlow, production-grade systems  |
+
+---
+
+### Pros and Cons
+
+| Aspect          | Implicit Bias                                 | Explicit Bias                                 |
+|-----------------|------------------------------------------------|-----------------------------------------------|
+| Pros          | Simple vector math (`X @ theta`)              | Clear structure, separate bias logic          |
+|                 | Easy to implement with matrix algebra         | Easier to interpret, debug, and save bias     |
+| Cons          | Must manually exclude bias from regularization| Requires separate handling in prediction      |
+|                 | Harder to isolate bias for analysis           | Slightly more verbose implementation          |
+
+---
+
+## Conclusion
+
+Even though **both methods work correctly**, the **explicit bias** approach is considered **more readable, maintainable, and safer**—especially when used in production environments or collaborative projects.
+For long-term clarity and fewer bugs, **explicit bias is generally preferred**.
+
 
 ---
 
@@ -84,7 +106,7 @@ for _ in range(num_iters):
 | **Stochastic Gradient Descent (SGD)** | Uses **one sample at a time** to compute the gradient. Fast but very noisy. |
 | **Mini-batch Gradient Descent** | Splits the data into **small batches** to compute the gradient. Balances speed and stability. |
 
-#### 🔍 Detailed Comparison
+#### Detailed Comparison
 
 | Feature           | Batch GD               | SGD                     | Mini-batch GD            |
 |-------------------|------------------------|--------------------------|---------------------------|
