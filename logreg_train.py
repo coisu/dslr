@@ -30,32 +30,26 @@ def sigmoid(z: np.ndarray) -> np.ndarray:
     z = np.clip(z, -500, 500)  # Prevent overflow
     return 1 / (1 + np.exp(-z))
 
-def gradient_descent(X: np.ndarray, y: np.ndarray, theta: np.ndarray, alpha: float, num_iters: int, lambda_:float = 0.1) -> np.ndarray:
+def gradient_descent(X: np.ndarray, y: np.ndarray, theta: np.ndarray, alpha: float, num_iters: int) -> np.ndarray:
     m = len(y)
     for _ in range(num_iters):
         predictions = sigmoid(X @ theta)
-        # gradient = (1 / m) * (X.T @ (predictions - y)) + (lambda_ / m) * theta
-        gradient = (1 / m) * (X.T @ (predictions - y))
-        
-        # L2 regularization (excluding bias term)
-        reg_term = (lambda_ / m) * theta
-        reg_term[0] = 0  # Don't regularize the bias term
-        gradient += reg_term
-
+        gradient = (1 / m) * (X.T @ (predictions - y))  # No regularization
         theta -= alpha * gradient
     return theta
 
-def train_one_vs_all(X: np.ndarray, y: np.ndarray, labels: np.ndarray, alpha: float = 0.05, num_iters: int = 5000, lambda_: float = 0.1) -> np.ndarray:
+
+def train_one_vs_all(X: np.ndarray, y: np.ndarray, labels: np.ndarray, alpha: float = 0.05, num_iters: int = 5000) -> np.ndarray:
     m, n = X.shape
     theta_matrix = np.zeros((len(labels), n))
 
     for i, label in enumerate(labels):
         y_binary = (y == label).astype(int)
         theta = np.zeros(n)
-        theta = gradient_descent(X, y_binary, theta, alpha, num_iters, lambda_)
+        theta = gradient_descent(X, y_binary, theta, alpha, num_iters)
         theta_matrix[i] = theta
-    print("theta_matrix:\n", theta_matrix)
     return theta_matrix
+
 
 def preprocess_data(data: pd.DataFrame, scaler) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     exclude_columns = {"Index", "First Name", "Last Name", "Birthday", "Best Hand", "Hogwarts House"}
@@ -91,7 +85,7 @@ if __name__ == "__main__":
     print("Any NaN in X:", np.isnan(X).any())
     print("Any Inf in X:", np.isinf(X).any())
 
-    theta_matrix = train_one_vs_all(X, y, class_labels, alpha=0.05, num_iters=5000, lambda_=0.1)
+    theta_matrix = train_one_vs_all(X, y, class_labels, alpha=0.05, num_iters=5000)
 
     os.makedirs("trained", exist_ok=True)
 
@@ -121,27 +115,27 @@ if __name__ == "__main__":
 #     z = np.clip(z, -500, 500)
 #     return 1 / (1 + np.exp(-z))
 
-# def gradient_descent(X, y, w, b, alpha, num_iters, lambda_=0.1):
+# def gradient_descent(X, y, w, b, alpha, num_iters):
 #     m = X.shape[0]
 #     for _ in range(num_iters):
 #         preds = sigmoid(np.dot(X, w.T) + b)
 #         error = preds - y.reshape(-1, 1)
 
-#         dw = (1 / m) * np.dot(error.T, X) + (lambda_ / m) * w
+#         dw = (1 / m) * np.dot(error.T, X)
 #         db = (1 / m) * np.sum(error)
 
 #         w -= alpha * dw
 #         b -= alpha * db
 #     return w, b
 
-# def train_one_vs_all(X, y, labels, alpha=0.05, num_iters=5000, lambda_=0.1):
+# def train_one_vs_all(X, y, labels, alpha=0.05, num_iters=5000):
 #     w_all = np.zeros((len(labels), X.shape[1]))
 #     b_all = np.zeros((len(labels), 1))
 #     for i, label in enumerate(labels):
 #         y_binary = (y == label).astype(int)
 #         w = np.zeros((1, X.shape[1]))
 #         b = 0
-#         w, b = gradient_descent(X, y_binary, w, b, alpha, num_iters, lambda_)
+#         w, b = gradient_descent(X, y_binary, w, b, alpha, num_iters)
 #         w_all[i] = w
 #         b_all[i] = b
 #     return w_all, b_all
@@ -168,7 +162,7 @@ if __name__ == "__main__":
 #     scaler = StandardScaler()
 #     X, y, class_labels = preprocess_data(data, scaler)
 
-#     w, b = train_one_vs_all(X, y, class_labels, alpha=0.05, num_iters=5000, lambda_=0.1)
+#     w, b = train_one_vs_all(X, y, class_labels, alpha=0.05, num_iters=5000)
 
 #     os.makedirs("trained", exist_ok=True)
 #     np.save("trained/weights.npy", w)
@@ -177,4 +171,4 @@ if __name__ == "__main__":
 #     with open("trained/scaler.pkl", "wb") as f:
 #         pickle.dump(scaler, f)
 
-    # print("✅ Successfully model trained[explicit bias]: weights.npy, class_labels.npy, scaler.pkl saved in trained/")
+#     print("✅ Successfully model trained[explicit bias]: weights.npy, class_labels.npy, scaler.pkl saved in trained/")
