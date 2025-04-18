@@ -1,34 +1,35 @@
+SCRIPTS = srcs
+DATA = datasets
+OUTPUTS = outputs
+TRAINED = trained
+
 build:
 	@docker build -t dslr .
 
-run: make 
+run:
 	@docker run -it -v $(PWD):/app dslr
 
-test: 
-	# @docker run -it -v $(PWD):/app dslr python3 describe.py datasets/standardized_data.csv
-	# @docker run -it -v $(PWD):/app dslr python3 describe.py datasets/standardized_data2.csv
-	@docker run -it -v $(PWD):/app dslr python3 describe.py datasets/dataset_train.csv
+test:
+	@docker run -it -v $(PWD):/app dslr python3 $(SCRIPTS)/describe.py $(DATA)/dataset_train.csv
 
 histogram:
-	@docker run -it -v $(PWD):/app dslr python3 histogram.py datasets/dataset_train.csv
+	@docker run -it -v $(PWD):/app dslr python3 $(SCRIPTS)/histogram.py $(DATA)/dataset_train.csv
 
 scatter_plot:
-	@docker run -it -v $(PWD):/app dslr python3 scatter_plot.py datasets/dataset_train.csv
+	@docker run -it -v $(PWD):/app dslr python3 $(SCRIPTS)/scatter_plot.py $(DATA)/dataset_train.csv
 
 pair_plot:
-	@docker run -it -v $(PWD):/app dslr python3 pair_plot.py datasets/dataset_train.csv
+	@docker run -it -v $(PWD):/app dslr python3 $(SCRIPTS)/pair_plot.py $(DATA)/dataset_train.csv
 
 train:
-	@docker run -it -v $(PWD):/app dslr python3 logreg_train.py datasets/dataset_train.csv
+	@docker run -it -v $(PWD):/app dslr python3 $(SCRIPTS)/logreg_train.py $(DATA)/dataset_train.csv
 
 magic_hat:
-	@docker run -it -v $(PWD):/app dslr python3 logreg_predict.py datasets/dataset_test.csv
+	@docker run -it -v $(PWD):/app dslr python3 $(SCRIPTS)/logreg_predict.py $(DATA)/dataset_test.csv
 
 eval:
-	@docker run -it -v $(PWD):/app dslr python3 evaluate_prediction.py
+	@docker run -it -v $(PWD):/app dslr python3 $(SCRIPTS)/evaluate_prediction.py
 
-
-# Run with Jupyter Notebook
 notebook:
 	@docker run -it -p 8888:8888 -v $(PWD):/app dslr jupyter notebook --ip=0.0.0.0 --allow-root --no-browser
 
@@ -37,23 +38,16 @@ down:
 	@docker ps -a -q --filter "ancestor=dslr" | xargs -r docker rm
 
 clean:
-	@docker images -fq --filter "dangling=true" | xargs -r docker rmi
+	@docker images -f "dangling=true" -q
 	@docker volume prune -f
 	@docker network prune -f
 
 fclean: down clean
-	@rm -rf histograms
-	@rm -rf scatter_plots
-	@rm -rf pair_plots
-	@rm -rf datasets/standardized_data.csv standardized_data2.csv
-	@rm -rf correlation_matrix.csv original_numeric_data.csv standardized_data.csv
-	@rm -rf trained houses.csv
-	@echo "Deleted histograms, scatter_plots, and intermediate CSV files"
-	@echo "Deleted trained model files and prediction output"
+	@rm -rf $(OUTPUTS)
+	@rm -rf $(TRAINED)
 	@docker images -q dslr | xargs -r docker rmi
-	@echo "Deleted dslr Docker image"
-
+	@echo "Cleaned outputs, trained models, docker image."
 
 re: fclean build
 
-.PHONY: build run test notebook down clean fclean re
+.PHONY: build run test histogram scatter_plot pair_plot train magic_hat eval notebook down clean fclean re
