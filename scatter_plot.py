@@ -98,4 +98,4 @@ if __name__ == "__main__":
         # Generate scatter plot for each pair
         output_dir = "scatter_plots"
         output_path = os.path.join(output_dir, f"scatter_plot_top_{rank}.png")
-        plot_scatter(standardized_data, feature1, feature2, output_path=output_path)
+        plot_scatter(data, feature1, feature2, output_path=output_path)
