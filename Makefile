@@ -9,7 +9,7 @@ build:
 run:
 	@docker run -it -v $(PWD):/app dslr
 
-test:
+describe:
 	@docker run -it -v $(PWD):/app dslr python3 $(SCRIPTS)/describe.py $(DATA)/dataset_train.csv
 
 histogram:
@@ -45,6 +45,7 @@ clean:
 fclean: down clean
 	@rm -rf $(OUTPUTS)
 	@rm -rf $(TRAINED)
+	@rm -rf $(DATA)/standardized_data.csv $(DATA)/standardized_data2.csv
 	@docker images -q dslr | xargs -r docker rmi
 	@echo "Cleaned outputs, trained models, docker image."
 

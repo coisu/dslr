@@ -7,6 +7,29 @@ Discover Data Science through this project by recreating the Hogwarts Sorting Ha
 - [Tech Stack](#tech-stack)
 
 
+## Usage
+```bash
+  git clone git@github.com:coisu/dslr.git
+  cd dslr
+
+  # Build Docker image
+  make         
+  # Show summary statistics for numeric features       
+  make describe
+  # Generate histograms
+  make histogram
+  # Scatter plots for top correlated feature pairs
+  make scatter_plot  
+  # Generate pair plots
+  make pair_plot      
+  # Train the Magic Hat
+  make train          
+  # The MAgic Hat assign students in Houses
+  make magic_hat    
+  # Accurancy evaluation  
+  make eval
+```
+
 ## Task Sequence
 ### Step 1: Data Analysis (describe.[extension])
 > Objective: Calculate and output statistical summary information for the dataset.

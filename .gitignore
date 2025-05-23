@@ -8,6 +8,8 @@ trained/
 houses.csv
 
 datasets/dataset_truth.csv
+datasets/standardized_data.csv
+datasets/standardized_data_2.csv
 datasets.tgz
 
 .DS_Store
