@@ -22,6 +22,7 @@ pair_plot:
 	@docker run -it -v $(PWD):/app dslr python3 $(SCRIPTS)/pair_plot.py $(DATA)/dataset_train.csv
 
 train:
+	@mkdir -p outputs/
 	@docker run -it -v $(PWD):/app dslr python3 $(SCRIPTS)/logreg_train.py $(DATA)/dataset_train.csv
 
 magic_hat:
