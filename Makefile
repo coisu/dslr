@@ -31,9 +31,6 @@ magic_hat:
 eval:
 	@docker run -it -v $(PWD):/app dslr python3 $(SCRIPTS)/evaluate_prediction.py
 
-notebook:
-	@docker run -it -p 8888:8888 -v $(PWD):/app dslr jupyter notebook --ip=0.0.0.0 --allow-root --no-browser
-
 down:
 	@docker ps -q --filter "ancestor=dslr" | xargs -r docker stop
 	@docker ps -a -q --filter "ancestor=dslr" | xargs -r docker rm
@@ -52,4 +49,4 @@ fclean: down clean
 
 re: fclean build
 
-.PHONY: build run test histogram scatter_plot pair_plot train magic_hat eval notebook down clean fclean re
+.PHONY: build run test histogram scatter_plot pair_plot train magic_hat eval down clean fclean re
