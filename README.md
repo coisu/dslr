@@ -105,8 +105,7 @@ Restrictions:
         - Predict the house for each student in the test dataset.
         Save the results in houses.csv format.
 
-### Step 4: Review and Submission
-> Objective: Test all functionalities to ensure proper operation and prepare for submission.
+  <img width="1053" height="647" alt="Screenshot from 2025-10-20 14-28-01" src="https://github.com/user-attachments/assets/99e0bab9-c9dd-42c1-a108-b16e64663e39" />
 
 ---
 
@@ -116,6 +115,7 @@ Restrictions:
 Normalization and Standardization are two key preprocessing techniques for scaling data. While they both adjust the scale of features, they serve different purposes and impact data differently. Here's a detailed comparison:
 
 ---
+
 
 ## **1. Definitions**
 
