@@ -91,7 +91,8 @@ Restrictions:
             > From this visualization, what features are you going to use for your logistic regression?
         
         
-      
+      <img width="10125" height="9750" alt="pair_plot-min" src="https://github.com/user-attachments/assets/8d7a2ce2-e523-4c67-bd07-693742ef6144" />
+
 
 ### Step 3: Logistic Regression
 > Objective: Use logistic regression to classify students into their respective houses.
