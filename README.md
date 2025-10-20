@@ -75,10 +75,23 @@ Restrictions:
           
             _"What are the two features that are similar ?"_
           
+            <img width="2400" height="1800" alt="scatter_plot_top_1" src="https://github.com/user-attachments/assets/42f482a3-8c95-4b00-8bd1-81d045bf8507" />
+            <img width="2400" height="1800" alt="scatter_plot_top_2" src="https://github.com/user-attachments/assets/41f8da82-1497-4883-b616-a3d37329362d" />
+            <img width="2400" height="1800" alt="scatter_plot_top_3" src="https://github.com/user-attachments/assets/39aa4472-97ca-44f8-8a61-0ed8893f78a5" />
+            <img width="2400" height="1800" alt="scatter_plot_top_4" src="https://github.com/user-attachments/assets/bb52d042-94bc-4e0e-b311-12505c557c64" />
+            <img width="2400" height="1800" alt="scatter_plot_top_5" src="https://github.com/user-attachments/assets/a06155c3-3004-4116-ad96-023ed2115f06" />
+
+
+
+
+
     - Pair Plot:
         - Display relationships between multiple features simultaneously.
         - displays a pair plot or scatter plot matrix (according to the library that you are using).
             > From this visualization, what features are you going to use for your logistic regression?
+        
+        
+      
 
 ### Step 3: Logistic Regression
 > Objective: Use logistic regression to classify students into their respective houses.
